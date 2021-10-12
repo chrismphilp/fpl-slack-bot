@@ -1,0 +1,12 @@
+{
+  "name": "fpl-slack-bot",
+  "version": "0.0.1",
+  "dependencies": {
+    "request": "^2.88.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chrismphilp/fpl-slack-bot.git"
+  },
+  "license": "ISC"
+}
