@@ -1,12 +1,21 @@
 {
   "name": "fpl-slack-bot",
   "version": "0.0.1",
+  "scripts": {
+    "test": "mocha"
+  },
   "dependencies": {
+    "@slack/events-api": "^3.0.1",
+    "@slack/web-api": "^6.4.0",
+    "list-it": "^1.3.7",
     "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "mocha": "^9.1.2"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/chrismphilp/fpl-slack-bot.git"
   },
-  "license": "ISC"
+  "license": "MIT"
 }
