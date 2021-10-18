@@ -14,7 +14,6 @@ jobs:
       memory_mb: 128
       max_instances: 1
       region: europe-west2
-      env_vars: SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
 
     runs-on: ubuntu-latest
 
@@ -49,7 +48,7 @@ jobs:
           memory_mb: $memory_mb
           max_instances: $max_instances
           region: $region
-          env_vars: $env_vars
+          env_vars: SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
 
       - name: Deploy FPL Player History
         uses: google-github-actions/deploy-cloud-functions@main
@@ -61,4 +60,4 @@ jobs:
           memory_mb: $memory_mb
           max_instances: $max_instances
           region: $region
-          env_vars: $env_vars
+          env_vars: SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
