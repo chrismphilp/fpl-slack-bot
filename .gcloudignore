@@ -1,4 +1,7 @@
+.github
 .gitignore
+
+node_modules
 
 LICENSE
 README.md
