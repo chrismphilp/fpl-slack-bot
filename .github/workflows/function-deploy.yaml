@@ -19,13 +19,23 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Build & Test
+          run: |
+            npm install
+            npm test
+
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ secrets.GCP_PROJECT }}
+          export_default_credentials: true
+
       - name: Deploy FPL League Ranking
         uses: google-github-actions/deploy-cloud-functions@main
         with:
           name: fpl-league-ranking
           runtime: nodejs16
-          credentials: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT }}
           source_dir: src
           entry_point: leagueRanking
           memory_mb: 128
