@@ -43,11 +43,11 @@ const formatTextTable = (dataRows) =>
 
 const createDataTable = (playerIds) => [
     COLUMNS.map(row => row.title),
-    ...playerIds.map(id => processPlayerHistory(id))
+    ...playerIds.map(async id => await processPlayerHistory(id))
 ];
 
-const processPlayerHistory = async (playerId) => {
-    return await request(`https://fantasy.premierleague.com/api/entry/${playerId}/history`, {json: true},
+const processPlayerHistory = async (playerId) =>
+    await request(`https://fantasy.premierleague.com/api/entry/${playerId}/history`, {json: true},
         async (error, result, body) => {
             console.error('Error:', error);
             const {current} = body;
@@ -57,7 +57,6 @@ const processPlayerHistory = async (playerId) => {
             const standardDeviation = standardDeviation(current, average);
             return [playerId, totalPoints, average, standardDeviation];
         });
-};
 
 module.exports = {
     playerHistory,
