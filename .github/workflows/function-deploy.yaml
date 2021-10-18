@@ -12,11 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      runtime: 128
-      source_dir: src
+      runtime: 'nodejs16'
+      source_dir: 'src'
       memory_mb: 128
       max_instances: 1
-      region: europe-west2
+      region: 'europe-west2'
 
     steps:
       - name: Checkout
