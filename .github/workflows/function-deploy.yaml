@@ -31,4 +31,5 @@ jobs:
           memory_mb: 128MB
           max_instances: 1
           region: europe-west2
-          env_vars: SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
+          env_vars: |
+            - SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
