@@ -35,10 +35,30 @@ jobs:
         uses: google-github-actions/deploy-cloud-functions@main
         with:
           name: fpl-league-ranking
-          runtime: nodejs16
-          source_dir: src
+          runtime: $runtime
+          source_dir: $source_dir
           entry_point: leagueRanking
-          memory_mb: 128
-          max_instances: 1
-          region: europe-west2
-          env_vars: SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
+          memory_mb: $memory_mb
+          max_instances: $max_instances
+          region: $region
+          env_vars: $env_vars
+
+      - name: Deploy FPL Player History
+        uses: google-github-actions/deploy-cloud-functions@main
+        with:
+          name: fpl-player-history
+          runtime: $runtime
+          source_dir: $source_dir
+          entry_point: playerHistory
+          memory_mb: $memory_mb
+          max_instances: $max_instances
+          region: $region
+          env_vars: $env_vars
+
+    - env:
+      runtime: 128
+      source_dir: src
+      memory_mb: 128
+      max_instances: 1
+      region: europe-west2
+      env_vars: SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
