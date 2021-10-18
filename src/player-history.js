@@ -31,7 +31,8 @@ const playerHistory = async (req, res) => {
         return res.status(400).send('No FPL players ids defined. Please ensure you send a list of playerIds');
     }
 
-    const formattedText = formatTextTable(createDataTable(playerIds));
+    const dataTable = await createDataTable(playerIds);
+    const formattedText = formatTextTable(dataTable);
     const slackMessageRes = await web.chat.postMessage({channel: chatId, text: formattedText});
     return res.status(200).send(slackMessageRes.ts);
 };
@@ -41,7 +42,7 @@ const formatTextTable = (dataRows) =>
     listit.setHeaderRow(dataRows.shift()).d(dataRows).toString()
     + '```';
 
-const createDataTable = (playerIds) => [
+const createDataTable = async (playerIds) => [
     COLUMNS.map(row => row.title),
     ...playerIds.map(async id => await processPlayerHistory(id))
 ];
