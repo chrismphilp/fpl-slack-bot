@@ -1,5 +1,6 @@
 .github
 .gitignore
+.gcloudignore
 
 node_modules
 
