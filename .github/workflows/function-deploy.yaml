@@ -20,9 +20,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Build & Test
-          run: |
-            npm install
-            npm test
+        run: |
+          npm install
+          npm test
 
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@master
@@ -41,5 +41,4 @@ jobs:
           memory_mb: 128
           max_instances: 1
           region: europe-west2
-          env_vars: |
-            SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
+          env_vars: SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
