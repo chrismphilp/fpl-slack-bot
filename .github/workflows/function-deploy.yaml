@@ -13,7 +13,6 @@ jobs:
 
     env:
       runtime: nodejs16
-      source_dir: src
       memory_mb: 128
       max_instances: 1
       region: europe-west2
@@ -33,7 +32,7 @@ jobs:
           npm install
           npm test
 
-      - name: Setup gcloud
+      - name: Setup GCloud
         uses: google-github-actions/setup-gcloud@master
         with:
           service_account_key: ${{ secrets.GCP_SA_KEY }}
@@ -45,7 +44,6 @@ jobs:
         with:
           name: fpl-league-ranking
           runtime: ${{ env.runtime }}
-          source_dir: ${{ env.source_dir }}
           entry_point: leagueRanking
           memory_mb: ${{ env.memory_mb }}
           max_instances: ${{ env.max_instances }}
@@ -57,7 +55,6 @@ jobs:
         with:
           name: fpl-player-history
           runtime: ${{ env.runtime }}
-          source_dir: ${{ env.source_dir }}
           entry_point: playerHistory
           memory_mb: ${{ env.memory_mb }}
           max_instances: ${{ env.max_instances }}
