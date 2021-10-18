@@ -46,7 +46,7 @@ describe('should produce correct data array for standings', () => {
     it('should return formatted Slack input', () => {
         const dataRows = createDataTable(standings);
         assert.equal(dataRows.length, 4);
-        assert.equal(dataRows.reduce((prev, curr) => prev + curr.length, 0), 20);
+        assert.equal(dataRows.reduce((prev, curr) => prev + curr.length, 0), 24);
 
         const formattedTextTable = formatTextTable(dataRows);
         assert.equal(formattedTextTable.substr(0, 3), '\`\`\`');

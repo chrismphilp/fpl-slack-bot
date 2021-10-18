@@ -9,9 +9,6 @@ const listit = new ListItLib({
 const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
 
-// This argument can be a channel ID, a DM ID, a MPDM ID, or a group ID
-const chatId = 'C02G8JD6R3Q';
-
 const COLUMNS = [
     {
         title: 'Team Name',
@@ -20,6 +17,10 @@ const COLUMNS = [
     {
         title: 'Player Name',
         key: 'player_name'
+    },
+    {
+        title: 'ID',
+        key: 'id'
     },
     {
         title: 'T/P',
@@ -33,7 +34,7 @@ const COLUMNS = [
         title: 'Rank',
         key: 'rank'
     }
-]
+];
 
 const leagueRanking = (req, res) => {
 
@@ -49,23 +50,25 @@ const leagueRanking = (req, res) => {
         return res.status(400).send('No FPL league defined. Please ensure you send a leagueId');
     }
 
+    let count = req.query.count || req.body.count || 10;
+
     return request(`https://fantasy.premierleague.com/api/leagues-classic/${leagueId}/standings`, {json: true},
         async (error, result, body) => {
             console.error('Error:', error);
             const {new_entries, last_updated_data, league, standings} = body;
-            const formattedText = formatTextTable(createDataTable(standings));
-            const slackMessage = await web.chat.postMessage({channel: chatId, text: formattedText});
-            return res.status(200).json({message: formattedText});
+            const formattedText = formatTextTable(createDataTable(standings), count);
+            const slackMessageRes = await web.chat.postMessage({channel: chatId, text: formattedText});
+            return res.status(200).send(slackMessageRes.ts);
         });
 };
 
-const createDataTable = (standings) => [createTitleRow(), ...createDataRows(standings)];
-
-const createTitleRow = () => COLUMNS.map(row => row.title);
-
-const createDataRows = ({results}) => results.map(result => COLUMNS.map(row => result[row.key]));
-
 const formatTextTable = (dataRows) => '```' + listit.setHeaderRow(dataRows.shift()).d(dataRows).toString() + '```';
+
+const createDataTable = ({results}, count) => [
+    COLUMNS.map(row => row.title),
+    ...results.slice(0, count).map(result => COLUMNS.map(row => result[row.key]))
+];
+
 
 module.exports = {
     leagueRanking,

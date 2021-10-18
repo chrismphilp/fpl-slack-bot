@@ -9,7 +9,8 @@ I personally host these as GCloud functions as they can be deployed for
 
 ## Deploying on GCloud
 
-To complete these steps you will need an active GCloud account.
+To complete these steps you will need an active [GCloud account](https://cloud.google.com/sdk/gcloud/reference/auth/login) 
+and a created [Slack bot](https://api.slack.com/apps?new_app=1).
 
 ## League Rankings
 
@@ -17,9 +18,13 @@ Found in *league-rankings.js*.
 
 ### Parameters 
 
+__`chatId: <string>`__ The identity of the FPL league.
 
-**chatId**: The identity of the FPL league.
+__`leagueId: <string>`__ The identity of a channel, DM, MPDM, or group.
 
-**leagueId**: The identity of a channel, DM, MPDM, or group.
+__`count: <number> | default = 10`__ The number of players from the league 
+to include in the output.
 
-**count**: The number of players from the league to include in the output. 
+## Player History
+
+Found in *player-history.js*.
