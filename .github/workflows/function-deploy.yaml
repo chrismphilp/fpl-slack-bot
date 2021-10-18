@@ -8,16 +8,17 @@ on:
 
 jobs:
   build:
-    env:
-      runtime: 128
-      source_dir: src
-      memory_mb: 128
-      max_instances: 1
-      region: europe-west2
 
     runs-on: ubuntu-latest
 
     steps:
+      env:
+        runtime: 128
+        source_dir: src
+        memory_mb: 128
+        max_instances: 1
+        region: europe-west2
+
       - name: Checkout
         uses: actions/checkout@v2
 
