@@ -25,7 +25,7 @@ jobs:
           name: fpl-league-ranking
           runtime: nodejs16
           credentials: ${{ secrets.GCP_SA_KEY }}
-          project_id: ${{ secrets.GCP_PROJECT }
+          project_id: ${{ secrets.GCP_PROJECT }}
           source_dir: src
           entry_point: leagueRanking
           memory_mb: 128MB
