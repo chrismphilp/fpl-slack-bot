@@ -8,6 +8,14 @@ on:
 
 jobs:
   build:
+    env:
+      runtime: 128
+      source_dir: src
+      memory_mb: 128
+      max_instances: 1
+      region: europe-west2
+      env_vars: SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
+
     runs-on: ubuntu-latest
 
     steps:
@@ -54,11 +62,3 @@ jobs:
           max_instances: $max_instances
           region: $region
           env_vars: $env_vars
-
-    - env:
-        runtime: 128
-        source_dir: src
-        memory_mb: 128
-        max_instances: 1
-        region: europe-west2
-        env_vars: SLACK_TOKEN=${{ secrets.SLACK_TOKEN }}
