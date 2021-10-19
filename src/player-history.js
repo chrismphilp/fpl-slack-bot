@@ -49,6 +49,7 @@ const formatTextTable = (dataRows) =>
 const createDataTable = async (playerIds) => ([
     COLUMNS,
     ...(await Promise.all(playerIds.map(processPlayerId)))
+        .sort((a, b) => a[a.length - 1] - b[b.length - 1])
 ]);
 
 const processPlayerId = (playerId) => new Promise(async (resolve, reject) => {

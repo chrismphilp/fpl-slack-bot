@@ -65,7 +65,10 @@ const leagueRanking = (req, res) => {
         });
 };
 
-const formatTextTable = (dataRows) => '```' + listIt.setHeaderRow(dataRows.shift()).d(dataRows).toString() + '```';
+const formatTextTable = (dataRows) =>
+    '```' +
+    listIt.setHeaderRow(dataRows.shift()).d(dataRows).toString() +
+    '```';
 
 const createDataTable = ({results}, count) => [
     COLUMNS.map(row => row.title),
