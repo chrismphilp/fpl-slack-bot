@@ -105,3 +105,6 @@ dist
 
 # JetBrains
 .idea
+
+# HTTP
+slack-requests.http

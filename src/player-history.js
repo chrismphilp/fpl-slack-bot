@@ -43,26 +43,31 @@ const formatTextTable = (dataRows) =>
     listit.setHeaderRow(dataRows.shift()).d(dataRows).toString()
     + '```';
 
-const createDataTable = async (playerIds) => [
-    COLUMNS.map(row => row.title),
-    ...await Promise.all(
-        playerIds.map(id => util.promisify(processPlayerHistory)(id))
-    )
-];
+const createDataTable = async (playerIds) => {
+    const processPlayerHistoryAsync = util.promisify(processPlayerHistory);
+
+    const playerRows = await Promise.all(playerIds.map(processPlayerHistoryAsync))
+        .then(data => data);
+
+    return [
+        COLUMNS.map(row => row.title),
+        ...playerRows
+    ];
+}
 
 const processPlayerHistory = (playerId) => new Promise((resolve, reject) => {
     request(`https://fantasy.premierleague.com/api/entry/${playerId}/history`, {json: true},
-        async (error, result, body) => {
+        (error, result, body) => {
             if (error) {
                 console.error('Error:', error);
-                reject(error);
+                return reject(error);
             }
             const {current} = body;
 
             const totalPoints = current.at(-1).total_points;
             const average = totalPoints / current.length;
             const standardDeviation = standardDeviation(current, average);
-            resolve([playerId, totalPoints, average, standardDeviation]);
+            return resolve([playerId, totalPoints, average, standardDeviation]);
         });
 });
 
