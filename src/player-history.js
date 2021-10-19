@@ -32,7 +32,7 @@ const playerHistory = async (req, res) => {
         return res.status(400).send('No FPL players ids defined. Please ensure you send a list of playerIds');
     }
 
-    const dataTable = await createDataTable(playerIds);
+    const dataTable = createDataTable(playerIds);
     const formattedText = formatTextTable(dataTable);
     const slackMessageRes = await web.chat.postMessage({channel: chatId, text: formattedText});
     return res.status(200).send(slackMessageRes.ts);
@@ -43,10 +43,10 @@ const formatTextTable = (dataRows) =>
     listit.setHeaderRow(dataRows.shift()).d(dataRows).toString()
     + '```';
 
-const createDataTable = async (playerIds) => {
+const createDataTable = (playerIds) => {
     const processPlayerHistoryAsync = util.promisify(processPlayerHistory);
 
-    const playerRows = await Promise.all(playerIds.map(processPlayerHistoryAsync))
+    const playerRows = Promise.all(playerIds.map(processPlayerHistoryAsync))
         .then(data => data);
 
     return [
@@ -57,7 +57,7 @@ const createDataTable = async (playerIds) => {
 
 const processPlayerHistory = (playerId) => new Promise((resolve, reject) => {
     request(`https://fantasy.premierleague.com/api/entry/${playerId}/history`, {json: true},
-        (error, result, body) => {
+        async (error, result, body) => {
             if (error) {
                 console.error('Error:', error);
                 return reject(error);
