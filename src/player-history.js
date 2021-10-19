@@ -45,8 +45,8 @@ const formatTextTable = (dataRows) =>
 
 const createDataTable = async (playerIds) => [
     COLUMNS.map(row => row.title),
-    await Promise.all(
-        ...playerIds.map(id => util.promisify(processPlayerHistory)(id))
+    ...await Promise.all(
+        playerIds.map(id => util.promisify(processPlayerHistory)(id))
     )
 ];
 
