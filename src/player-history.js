@@ -2,8 +2,7 @@ const request = require('request');
 const {WebClient} = require('@slack/web-api');
 const ListItLib = require("list-it");
 const {standardDeviation} = require("./util/math");
-const util = require("util");
-const listit = new ListItLib({
+const listIt = new ListItLib({
     autoAlign: true,
     headerUnderline: true,
 });
@@ -32,7 +31,7 @@ const playerHistory = async (req, res) => {
         return res.status(400).send('No FPL players ids defined. Please ensure you send a list of playerIds');
     }
 
-    const dataTable = createDataTable(playerIds);
+    const dataTable = await createDataTable(playerIds);
     const formattedText = formatTextTable(dataTable);
     const slackMessageRes = await web.chat.postMessage({channel: chatId, text: formattedText});
     return res.status(200).send(slackMessageRes.ts);
@@ -40,39 +39,32 @@ const playerHistory = async (req, res) => {
 
 const formatTextTable = (dataRows) =>
     '```' +
-    listit.setHeaderRow(dataRows.shift()).d(dataRows).toString()
+    listIt.setHeaderRow(dataRows.shift()).d(dataRows).toString()
     + '```';
 
-const createDataTable = (playerIds) => {
-    const processPlayerHistoryAsync = util.promisify(processPlayerHistory);
-
-    const playerRows = Promise.all(playerIds.map(processPlayerHistoryAsync))
-        .then(data => data);
-
-    return [
-        COLUMNS.map(row => row.title),
-        ...playerRows
-    ];
-}
+const createDataTable = async (playerIds) => ([
+    COLUMNS,
+    ...(await Promise.all(playerIds.map(processPlayerHistory)))
+]);
 
 const processPlayerHistory = (playerId) => new Promise((resolve, reject) => {
-    request(`https://fantasy.premierleague.com/api/entry/${playerId}/history`, {json: true},
-        async (error, result, body) => {
+    request(`https://fantasy.premierleague.com/api/entry/${playerId}/history/`, {json: true},
+        async (error, result, {current}) => {
             if (error) {
                 console.error('Error:', error);
                 return reject(error);
             }
-            const {current} = body;
 
             const totalPoints = current.at(-1).total_points;
             const average = totalPoints / current.length;
-            const standardDeviation = standardDeviation(current, average);
-            return resolve([playerId, totalPoints, average, standardDeviation]);
+            const sd = standardDeviation(current.map(v => v.points), average);
+            return resolve([playerId, totalPoints, average, sd]);
         });
 });
 
 module.exports = {
     playerHistory,
+    createDataTable,
     formatTextTable,
     processPlayerHistory
 }

@@ -12,8 +12,10 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      name: fpl-league-ranking
       runtime: nodejs16
       source_dir: src
+      entry_point: leagueRanking
       memory_mb: 128
       max_instances: 1
       region: europe-west2
@@ -41,13 +43,13 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT }}
           export_default_credentials: true
 
-      - name: Deploy FPL League Ranking
+      - name: Deploy ${{ env.name }}
         uses: google-github-actions/deploy-cloud-functions@main
         with:
-          name: fpl-league-ranking
+          name: ${{ env.name }}
           runtime: ${{ env.runtime }}
           source_dir: ${{ env.source_dir }}
-          entry_point: leagueRanking
+          entry_point: ${{ env.entry_point }}
           memory_mb: ${{ env.memory_mb }}
           max_instances: ${{ env.max_instances }}
           region: ${{ env.region }}

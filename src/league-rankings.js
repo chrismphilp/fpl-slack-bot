@@ -1,7 +1,7 @@
 const request = require('request');
 const {WebClient} = require('@slack/web-api');
 const ListItLib = require("list-it");
-const listit = new ListItLib({
+const listIt = new ListItLib({
     autoAlign: true,
     headerUnderline: true,
 });
@@ -53,16 +53,19 @@ const leagueRanking = (req, res) => {
     let count = req.query.count || req.body.count || 10;
 
     return request(`https://fantasy.premierleague.com/api/leagues-classic/${leagueId}/standings`, {json: true},
-        async (error, result, body) => {
-            console.error('Error:', error);
-            const {new_entries, last_updated_data, league, standings} = body;
+        async (error, result, {standings}) => {
+            if (error) {
+                console.error('Error:', error);
+                return res.status(500).send(error);
+            }
+
             const formattedText = formatTextTable(createDataTable(standings), count);
             const slackMessageRes = await web.chat.postMessage({channel: chatId, text: formattedText});
             return res.status(200).send(slackMessageRes.ts);
         });
 };
 
-const formatTextTable = (dataRows) => '```' + listit.setHeaderRow(dataRows.shift()).d(dataRows).toString() + '```';
+const formatTextTable = (dataRows) => '```' + listIt.setHeaderRow(dataRows.shift()).d(dataRows).toString() + '```';
 
 const createDataTable = ({results}, count) => [
     COLUMNS.map(row => row.title),
