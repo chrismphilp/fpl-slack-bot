@@ -2,6 +2,7 @@ const request = require('request');
 const {WebClient} = require('@slack/web-api');
 const ListItLib = require("list-it");
 const {standardDeviation} = require("./util/math");
+const util = require("util");
 const listit = new ListItLib({
     autoAlign: true,
     headerUnderline: true,
@@ -44,11 +45,13 @@ const formatTextTable = (dataRows) =>
 
 const createDataTable = async (playerIds) => [
     COLUMNS.map(row => row.title),
-    ...playerIds.map(async id => await processPlayerHistory(id))
+    await Promise.all(
+        ...playerIds.map(id => util.promisify(processPlayerHistory(id)))
+    )
 ];
 
-const processPlayerHistory = async (playerId) =>
-    await request(`https://fantasy.premierleague.com/api/entry/${playerId}/history`, {json: true},
+const processPlayerHistory = (playerId) =>
+    request(`https://fantasy.premierleague.com/api/entry/${playerId}/history`, {json: true},
         async (error, result, body) => {
             console.error('Error:', error);
             const {current} = body;
