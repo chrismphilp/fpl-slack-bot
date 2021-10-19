@@ -11,9 +11,13 @@ const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
 
 const COLUMNS = [
+    'Team Name',
+    'First Name',
+    'Last Name',
     'ID',
     'T/P',
-    'T/GW/P',
+    'Μ/GW/P',
+    'σ/GW/P',
     'Global Rank',
 ];
 
@@ -44,8 +48,16 @@ const formatTextTable = (dataRows) =>
 
 const createDataTable = async (playerIds) => ([
     COLUMNS,
-    ...(await Promise.all(playerIds.map(processPlayerHistory)))
+    ...(await Promise.all(playerIds.map(processPlayerId)))
 ]);
+
+const processPlayerId = (playerId) => new Promise(async (resolve, reject) => {
+    const result = await Promise.all([
+        processTeamInfo(playerId),
+        processPlayerHistory(playerId)
+    ]);
+    return resolve([...result[0], ...result[1]]);
+});
 
 const processPlayerHistory = (playerId) => new Promise((resolve, reject) => {
     request(`https://fantasy.premierleague.com/api/entry/${playerId}/history/`, {json: true},
@@ -55,10 +67,23 @@ const processPlayerHistory = (playerId) => new Promise((resolve, reject) => {
                 return reject(error);
             }
 
-            const totalPoints = current.at(-1).total_points;
-            const average = totalPoints / current.length;
-            const sd = standardDeviation(current.map(v => v.points), average);
-            return resolve([playerId, totalPoints, average, sd]);
+            const latestGameweek = current.at(-1);
+            const {overall_rank, total_points} = latestGameweek;
+            const average = (total_points / current.length).toFixed(2);
+            const sd = standardDeviation(current.map(v => v.points), average).toFixed(2);
+
+            return resolve([playerId, total_points, average, sd, overall_rank]);
+        });
+});
+
+const processTeamInfo = (playerId) => new Promise((resolve, reject) => {
+    request(`https://fantasy.premierleague.com/api/entry/${playerId}/`, {json: true},
+        async (error, result, {name, player_first_name, player_last_name}) => {
+            if (error) {
+                console.error('Error:', error);
+                return reject(error);
+            }
+            return resolve([name, player_first_name, player_last_name]);
         });
 });
 
@@ -66,5 +91,5 @@ module.exports = {
     playerHistory,
     createDataTable,
     formatTextTable,
-    processPlayerHistory
+    processPlayerId
 }

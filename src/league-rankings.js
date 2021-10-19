@@ -72,7 +72,6 @@ const createDataTable = ({results}, count) => [
     ...results.slice(0, count).map(result => COLUMNS.map(row => result[row.key]))
 ];
 
-
 module.exports = {
     leagueRanking,
     createDataTable,
