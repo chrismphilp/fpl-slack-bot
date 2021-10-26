@@ -42,7 +42,7 @@ const leagueRanking = (req, res) => {
             }
 
             const {results} = standings;
-            const formattedText = formatTextTable(createDataTable(results.slice(0, count)), count);
+            const formattedText = formatTextTable(createDataTable(results.slice(0, count)));
             await web.chat.postMessage({channel: channelId, text: formattedText});
             return res.status(200).send(formattedText);
         });
@@ -53,9 +53,9 @@ const formatTextTable = (dataRows) =>
     listIt.setHeaderRow(dataRows.shift()).d(dataRows).toString() +
     '```';
 
-const createDataTable = ({results}, count) => [
+const createDataTable = (values) => [
     COLUMNS.map(row => row.title),
-    ...results.slice(0, count).map(result => COLUMNS.map(row => result[row.key]))
+    ...values.map(result => COLUMNS.map(row => result[row.key]))
 ];
 
 module.exports = {
