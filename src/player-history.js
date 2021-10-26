@@ -23,13 +23,13 @@ const COLUMNS = [
 
 const playerHistory = async (req, res) => {
 
-    let chatId = req.query.chatId || req.body.chatId;
+    let channelId = req.query.channel_id || req.body.channel_id;
 
-    if (chatId === undefined) {
-        return res.status(400).send('No Slack chat defined. Please ensure you send a chatId');
+    if (channelId === undefined) {
+        return res.status(400).send('No Slack chat defined. Please ensure you send a channelId');
     }
 
-    let playerIds = req.query.playersIds || req.body.playerIds;
+    let playerIds = req.query.text || req.body.text;
 
     if (playerIds === undefined) {
         return res.status(400).send('No FPL players ids defined. Please ensure you send a list of playerIds');
@@ -37,7 +37,7 @@ const playerHistory = async (req, res) => {
 
     const dataTable = await createDataTable(playerIds);
     const formattedText = formatTextTable(dataTable);
-    const slackMessageRes = await web.chat.postMessage({channel: chatId, text: formattedText});
+    const slackMessageRes = await web.chat.postMessage({channel: channelId, text: formattedText});
     return res.status(200).send(slackMessageRes.ts);
 };
 

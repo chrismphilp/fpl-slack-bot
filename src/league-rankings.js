@@ -31,20 +31,20 @@ const COLUMNS = [
         key: 'event_total'
     },
     {
-        title: 'Rank',
+        title: 'League Rank',
         key: 'rank'
     }
 ];
 
 const leagueRanking = (req, res) => {
 
-    let chatId = req.query.chatId || req.body.chatId;
+    let channelId = req.query.channel_id || req.body.channel_id;
 
-    if (chatId === undefined) {
-        return res.status(400).send('No Slack chat defined. Please ensure you send a chatId');
+    if (channelId === undefined) {
+        return res.status(400).send('No Slack chat defined. Please ensure you send a channelId');
     }
 
-    let leagueId = req.query.leagueId || req.body.leagueId;
+    let leagueId = req.query.text || req.body.text;
 
     if (leagueId === undefined) {
         return res.status(400).send('No FPL league defined. Please ensure you send a leagueId');
@@ -60,7 +60,7 @@ const leagueRanking = (req, res) => {
             }
 
             const formattedText = formatTextTable(createDataTable(standings), count);
-            const slackMessageRes = await web.chat.postMessage({channel: chatId, text: formattedText});
+            const slackMessageRes = await web.chat.postMessage({channel: channelId, text: formattedText});
             return res.status(200).send(slackMessageRes.ts);
         });
 };
