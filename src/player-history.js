@@ -37,8 +37,8 @@ const playerHistory = async (req, res) => {
 
     const dataTable = await createDataTable(playerIds);
     const formattedText = formatTextTable(dataTable);
-    const slackMessageRes = await web.chat.postMessage({channel: channelId, text: formattedText});
-    return res.status(200).send(slackMessageRes.ts);
+    await web.chat.postMessage({channel: channelId, text: formattedText});
+    return res.status(200).send(formattedText);
 };
 
 const formatTextTable = (dataRows) =>
@@ -52,7 +52,7 @@ const createDataTable = async (playerIds) => ([
         .sort((a, b) => a[a.length - 1] - b[b.length - 1])
 ]);
 
-const processPlayerId = (playerId) => new Promise(async (resolve, reject) => {
+const processPlayerId = (playerId) => new Promise(async (resolve) => {
     const result = await Promise.all([
         processTeamInfo(playerId),
         processPlayerHistory(playerId)

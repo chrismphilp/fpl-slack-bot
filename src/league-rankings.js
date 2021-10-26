@@ -10,30 +10,12 @@ const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
 
 const COLUMNS = [
-    {
-        title: 'Team Name',
-        key: 'entry_name'
-    },
-    {
-        title: 'Player Name',
-        key: 'player_name'
-    },
-    {
-        title: 'ID',
-        key: 'id'
-    },
-    {
-        title: 'T/P',
-        key: 'total'
-    },
-    {
-        title: 'T/GW/P',
-        key: 'event_total'
-    },
-    {
-        title: 'League Rank',
-        key: 'rank'
-    }
+    {title: 'Team Name', key: 'entry_name'},
+    {title: 'Player Name', key: 'player_name'},
+    {title: 'ID', key: 'id'},
+    {title: 'T/P', key: 'total'},
+    {title: 'T/GW/P', key: 'event_total'},
+    {title: 'League Rank', key: 'rank'}
 ];
 
 const leagueRanking = (req, res) => {
@@ -59,9 +41,10 @@ const leagueRanking = (req, res) => {
                 return res.status(500).send(error);
             }
 
-            const formattedText = formatTextTable(createDataTable(standings), count);
-            const slackMessageRes = await web.chat.postMessage({channel: channelId, text: formattedText});
-            return res.status(200).send(slackMessageRes.ts);
+            const {results} = standings;
+            const formattedText = formatTextTable(createDataTable(results.slice(0, count)), count);
+            await web.chat.postMessage({channel: channelId, text: formattedText});
+            return res.status(200).send(formattedText);
         });
 };
 
