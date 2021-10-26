@@ -35,7 +35,7 @@ const playerHistory = async (req, res) => {
         return res.status(400).send('No FPL players ids defined. Please ensure you send a list of playerIds');
     }
 
-    const dataTable = await createDataTable(playerIds);
+    const dataTable = await createDataTable(playerIds.replace(/\s/g,'').split(','));
     const formattedText = formatTextTable(dataTable);
     await web.chat.postMessage({channel: channelId, text: formattedText});
     return res.status(200).send(formattedText);
