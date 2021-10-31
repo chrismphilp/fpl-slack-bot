@@ -63,5 +63,5 @@ const createDataTable = (values) => [
 module.exports = {
     leagueRanking,
     createDataTable,
-    formatTextTable
+    formatTextTable,
 }

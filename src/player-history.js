@@ -94,5 +94,5 @@ module.exports = {
     playerHistory,
     createDataTable,
     formatTextTable,
-    processPlayerId
+    processPlayerId,
 }
