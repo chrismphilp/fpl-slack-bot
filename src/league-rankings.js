@@ -1,11 +1,7 @@
 const request = require('request');
 const {WebClient} = require('@slack/web-api');
-const ListItLib = require("list-it");
 const {createErrorMessage} = require("./util/error");
-const listIt = new ListItLib({
-    autoAlign: true,
-    headerUnderline: true,
-});
+const {formatTextTable} = require("./util/format");
 
 const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
@@ -50,11 +46,6 @@ const leagueRanking = (req, res) => {
         });
 };
 
-const formatTextTable = (dataRows) =>
-    '```' +
-    listIt.setHeaderRow(dataRows.shift()).d(dataRows).toString() +
-    '```';
-
 const createDataTable = (values) => [
     COLUMNS.map(row => row.title),
     ...values.map(result => COLUMNS.map(row => result[row.key]))
@@ -63,5 +54,4 @@ const createDataTable = (values) => [
 module.exports = {
     leagueRanking,
     createDataTable,
-    formatTextTable,
 }

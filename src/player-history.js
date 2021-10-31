@@ -1,12 +1,8 @@
 const request = require('request');
 const {WebClient} = require('@slack/web-api');
-const ListItLib = require("list-it");
 const {standardDeviation} = require("./util/math");
 const {createErrorMessage} = require("./util/error");
-const listIt = new ListItLib({
-    autoAlign: true,
-    headerUnderline: true,
-});
+const {formatTextTable} = require("./util/format");
 
 const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
@@ -42,11 +38,6 @@ const playerHistory = async (req, res) => {
     const formattedText = formatTextTable(dataTable);
     await web.chat.postMessage({channel: channelId, text: formattedText});
 };
-
-const formatTextTable = (dataRows) =>
-    '```' +
-    listIt.setHeaderRow(dataRows.shift()).d(dataRows).toString()
-    + '```';
 
 const createDataTable = async (playerIds) => ([
     COLUMNS,
@@ -92,7 +83,4 @@ const processTeamInfo = (playerId) => new Promise((resolve, reject) => {
 
 module.exports = {
     playerHistory,
-    createDataTable,
-    formatTextTable,
-    processPlayerId,
 }

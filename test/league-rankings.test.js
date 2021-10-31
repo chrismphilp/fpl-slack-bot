@@ -1,5 +1,6 @@
 const assert = require('assert');
-const {createDataTable, formatTextTable} = require("../src/league-rankings");
+const {createDataTable} = require("../src/league-rankings");
+const {formatTextTable} = require("../src/util/format");
 
 describe('should produce correct data array for standings', () => {
 

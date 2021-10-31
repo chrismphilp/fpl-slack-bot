@@ -1,20 +1,17 @@
 const request = require('request');
 const dayjs = require("dayjs");
 const {WebClient} = require('@slack/web-api');
-const ListItLib = require("list-it");
 const {createErrorMessage} = require("./util/error");
-const listIt = new ListItLib({
-    autoAlign: true,
-    headerUnderline: true,
-});
+const {getStaticData} = require("./util/static-data");
+const {formatTextTable} = require("./util/format");
 
 const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
 
 const COLUMNS = [
-    {title: 'Date', getter: (_, {kickoff_time}) => dayjs(kickoff_time).format('dddd D MMMM YYYY')},
     {title: 'Home', getter: (map, {team_h}) => map.get(team_h)},
     {title: 'Away', getter: (map, {team_a}) => map.get(team_a)},
+    {title: 'Date', getter: (_, {kickoff_time}) => dayjs(kickoff_time).format('dddd D MMMM YYYY')},
     {title: 'Time', getter: (_, {kickoff_time}) => dayjs(kickoff_time).format('HH:mm')},
 ];
 
@@ -37,7 +34,7 @@ const processGameweekFixtures = () => new Promise(async (resolve, _) => {
 
     const apiCalls = await Promise.all([
         getUpcomingFixtures(),
-        getTeamMappings(),
+        getStaticData(getTeamMappings),
     ]);
 
     const upcomingFixtures = apiCalls[0];
@@ -62,23 +59,7 @@ const getUpcomingFixtures = () => new Promise((resolve, reject) => {
         });
 });
 
-const getTeamMappings = () => new Promise((resolve, reject) => {
-    request(`https://fantasy.premierleague.com/api/bootstrap-static/`, {json: true},
-        async (error, result, {teams}) => {
-            if (error) {
-                console.error('Error:', error);
-                return reject(error);
-            }
-
-            const teamMap = new Map(teams.map(team => [team.id, team.name]));
-            return resolve(teamMap);
-        });
-});
-
-const formatTextTable = (dataRows) =>
-    '```' +
-    listIt.setHeaderRow(dataRows.shift()).d(dataRows).toString()
-    + '```';
+const getTeamMappings = ({teams}) => new Map(teams.map(team => [team.id, team.name]));
 
 const createDataTable = async () => [
     COLUMNS.map(col => col.title),
@@ -87,6 +68,4 @@ const createDataTable = async () => [
 
 module.exports = {
     gameweekFixtures,
-    processGameweekFixtures,
-    createDataTable,
 }
