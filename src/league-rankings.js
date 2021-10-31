@@ -1,6 +1,7 @@
 const request = require('request');
 const {WebClient} = require('@slack/web-api');
 const ListItLib = require("list-it");
+const {createErrorMessage} = require("./util/error");
 const listIt = new ListItLib({
     autoAlign: true,
     headerUnderline: true,
@@ -23,28 +24,29 @@ const leagueRanking = (req, res) => {
     let channelId = req.query.channel_id || req.body.channel_id;
 
     if (channelId === undefined) {
-        return res.status(400).send('No Slack chat defined. Please ensure you send a channelId');
+        return res.status(400).send(createErrorMessage('No Slack chat defined. Please ensure you send a channelId'));
     }
 
     let leagueId = req.query.text || req.body.text;
 
     if (leagueId === undefined) {
-        return res.status(400).send('No FPL league defined. Please ensure you send a leagueId');
+        return res.status(400).send(createErrorMessage('No FPL league defined. Please ensure you send a leagueId'));
     }
 
     let count = req.query.count || req.body.count || 10;
+
+    res.status(200).send();
 
     return request(`https://fantasy.premierleague.com/api/leagues-classic/${leagueId}/standings`, {json: true},
         async (error, result, {standings}) => {
             if (error) {
                 console.error('Error:', error);
-                return res.status(500).send(error);
+                return res.status(500).send(createErrorMessage(error));
             }
 
             const {results} = standings;
             const formattedText = formatTextTable(createDataTable(results.slice(0, count)));
             await web.chat.postMessage({channel: channelId, text: formattedText});
-            return res.status(200).send(formattedText);
         });
 };
 

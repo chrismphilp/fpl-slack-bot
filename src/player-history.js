@@ -2,6 +2,7 @@ const request = require('request');
 const {WebClient} = require('@slack/web-api');
 const ListItLib = require("list-it");
 const {standardDeviation} = require("./util/math");
+const {createErrorMessage} = require("./util/error");
 const listIt = new ListItLib({
     autoAlign: true,
     headerUnderline: true,
@@ -26,19 +27,20 @@ const playerHistory = async (req, res) => {
     let channelId = req.query.channel_id || req.body.channel_id;
 
     if (channelId === undefined) {
-        return res.status(400).send('No Slack chat defined. Please ensure you send a channelId');
+        return res.status(400).send(createErrorMessage('No Slack chat defined. Please ensure you send a channelId'));
     }
 
     let playerIds = req.query.text || req.body.text;
 
     if (playerIds === undefined) {
-        return res.status(400).send('No FPL players ids defined. Please ensure you send a list of playerIds');
+        return res.status(400).send(createErrorMessage('No FPL players ids defined. Please ensure you send a list of playerIds'));
     }
+
+    res.status(200).send();
 
     const dataTable = await createDataTable(playerIds.replace(/\s/g,'').split(','));
     const formattedText = formatTextTable(dataTable);
     await web.chat.postMessage({channel: channelId, text: formattedText});
-    return res.status(200).send(formattedText);
 };
 
 const formatTextTable = (dataRows) =>
