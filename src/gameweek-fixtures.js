@@ -1,8 +1,8 @@
 const request = require('request');
+const dayjs = require("dayjs");
 const {WebClient} = require('@slack/web-api');
 const ListItLib = require("list-it");
 const {createErrorMessage} = require("./util/error");
-const dayjs = require("dayjs");
 const listIt = new ListItLib({
     autoAlign: true,
     headerUnderline: true,
@@ -12,9 +12,10 @@ const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
 
 const COLUMNS = [
+    {title: 'Date', getter: (_, {kickoff_time}) => dayjs(kickoff_time).format('dddd D MMMM YYYY')},
     {title: 'Home', getter: (map, {team_h}) => map.get(team_h)},
     {title: 'Away', getter: (map, {team_a}) => map.get(team_a)},
-    {title: 'Kickoff', getter: (_, {kickoff_time}) => dayjs(kickoff_time).format('HH:mm dddd D MMMM YYYY')},
+    {title: 'Time', getter: (_, {kickoff_time}) => dayjs(kickoff_time).format('HH:mm')},
 ];
 
 const gameweekFixtures = async (req, res) => {
@@ -32,17 +33,7 @@ const gameweekFixtures = async (req, res) => {
     await web.chat.postMessage({channel: channelId, text: formattedText});
 };
 
-const formatTextTable = (dataRows) =>
-    '```' +
-    listIt.setHeaderRow(dataRows.shift()).d(dataRows).toString()
-    + '```';
-
-const createDataTable = async () => [
-    COLUMNS.map(col => col.title),
-    ...(await processGameweekFixtures()),
-];
-
-const processGameweekFixtures = () => new Promise(async (resolve, reject) => {
+const processGameweekFixtures = () => new Promise(async (resolve, _) => {
 
     const apiCalls = await Promise.all([
         getUpcomingFixtures(),
@@ -66,7 +57,8 @@ const getUpcomingFixtures = () => new Promise((resolve, reject) => {
             }
 
             const nextFixture = fixtures[0].event;
-            return resolve(fixtures.filter(fixture => fixture.event === nextFixture));
+            const upcomingFixtures = fixtures.filter(fixture => fixture.event === nextFixture);
+            return resolve(upcomingFixtures);
         });
 });
 
@@ -82,6 +74,16 @@ const getTeamMappings = () => new Promise((resolve, reject) => {
             return resolve(teamMap);
         });
 });
+
+const formatTextTable = (dataRows) =>
+    '```' +
+    listIt.setHeaderRow(dataRows.shift()).d(dataRows).toString()
+    + '```';
+
+const createDataTable = async () => [
+    COLUMNS.map(col => col.title),
+    ...(await processGameweekFixtures()),
+];
 
 module.exports = {
     gameweekFixtures,

@@ -1,0 +1,53 @@
+{
+  "_metadata": {
+    "major_version": 1,
+    "minor_version": 1
+  },
+  "display_information": {
+    "name": "Fantasy Football League Bot",
+    "description": "An FPL data bot.",
+    "background_color": "#131929"
+  },
+  "features": {
+    "bot_user": {
+      "display_name": "Fantasy Football League Bot",
+      "always_online": false
+    },
+    "slash_commands": [
+      {
+        "command": "/player-history",
+        "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-player-history",
+        "description": "Gameweek history for a selection of players",
+        "usage_hint": "playerId1, playerdId2, etc.",
+        "should_escape": true
+      },
+      {
+        "command": "/league-rankings",
+        "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-league-ranking",
+        "description": "Breakdown for a FPL league",
+        "usage_hint": "leagueId",
+        "should_escape": true
+      },
+      {
+        "command": "/gameweek-fixtures",
+        "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-gameweek-fixtures",
+        "description": "Upcoming Gameweek fixtures",
+        "should_escape": true
+      }
+    ]
+  },
+  "oauth_config": {
+    "scopes": {
+      "bot": [
+        "chat:write",
+        "incoming-webhook",
+        "commands"
+      ]
+    }
+  },
+  "settings": {
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": false,
+    "token_rotation_enabled": false
+  }
+}

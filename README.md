@@ -20,7 +20,12 @@ and a created [Slack bot](https://api.slack.com/apps?new_app=1).
 properties to match your desired build (found in `.github/workflows/`).
 4) Run the Github actions
 5) With your now deployed GCloud functions, you can enter the provided URL with
-your choice of slack commands. 
+your choice of slack commands.
+
+## Notes
+
+You will need to give your GCloud Functions `gcloud function invoker` permissions
+to be able to call them from Slack.
 
 ## League Rankings
 
@@ -62,4 +67,24 @@ Team Name     First Name Last Name ID  T/P Μ/GW/P  σ/GW/P  Global Rank
 ------------- ---------- --------- --- --- ------- ------- -----------
 Hasselhoff XV Chaz (AZ)  Phillips  500 635 70.56   20.22         41684
 Heine         Heine      Brakstad  50  604 67.11   19.01        237667
+```
+
+## Gameweek Fixtures
+
+Found in *gameweek-fixtures.js*.
+
+### Parameters
+
+__`channel_id: <string>`__ The identity of a channel, DM, MPDM, or group.
+
+### Example Message
+
+```
+Home           Away        Kickoff                       
+-------------- ----------- ------------------------------
+Southampton    Aston Villa 20:00 Friday 5 November 2021  
+Man Utd        Man City    12:30 Saturday 6 November 2021
+Brentford      Norwich     15:00 Saturday 6 November 2021
+Chelsea        Burnley     15:00 Saturday 6 November 2021
+Crystal Palace Wolves      15:00 Saturday 6 November 2021
 ```
