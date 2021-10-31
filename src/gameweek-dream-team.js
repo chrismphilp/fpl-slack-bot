@@ -45,7 +45,8 @@ const processGameweekDreamTeam = () => new Promise(async (resolve, _) => {
     const teamMappings = new Map(staticData.teams.map(team => [team.id, team.name]));
     const individualPlayerIds = gameweekPlayerMappings.map(v => v[0]);
     const filteredPlayers = staticData.elements.filter(elem => individualPlayerIds.includes(elem.id));
-    const playerDetails = gameweekPlayerMappings.map(val => processPlayer(val[0], val[1], filteredPlayers, teamMappings));
+    const playerDetails = gameweekPlayerMappings.map(val => processPlayer(val[0], val[1], filteredPlayers, teamMappings))
+        .sort((a, b) => a[3] - b[3]);
 
     return resolve(playerDetails);
 });

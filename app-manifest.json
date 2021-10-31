@@ -33,6 +33,12 @@
         "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-gameweek-fixtures",
         "description": "Upcoming Gameweek fixtures",
         "should_escape": true
+      },
+      {
+        "command": "/gameweek-dream-team",
+        "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-gameweek-dream-team",
+        "description": "Current Gameweek dream team",
+        "should_escape": true
       }
     ]
   },
