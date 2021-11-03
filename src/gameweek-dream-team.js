@@ -38,13 +38,12 @@ const createDataTable = async () => [
 
 const processGameweekDreamTeam = () => new Promise(async (resolve, _) => {
 
-    const staticData = await getStaticData((v) => v);
-    const currentGameweekId = staticData.events.find(event => event.is_current === true).id;
+    const [events, elements, teams] = await getStaticData(({events, elements, teams}) => [events, elements, teams]);
+    const currentGameweekId = events.find(event => event.is_current === true).id;
     const gameweekPlayerMappings = await getGameweekDreamTeamPlayers(currentGameweekId);
-    console.log(gameweekPlayerMappings);
-    const teamMappings = new Map(staticData.teams.map(team => [team.id, team.name]));
+    const teamMappings = new Map(teams.map(team => [team.id, team.name]));
     const individualPlayerIds = gameweekPlayerMappings.map(v => v[0]);
-    const filteredPlayers = staticData.elements.filter(elem => individualPlayerIds.includes(elem.id));
+    const filteredPlayers = elements.filter(elem => individualPlayerIds.includes(elem.id));
     const playerDetails = gameweekPlayerMappings.map(val => processPlayer(val[0], val[1], filteredPlayers, teamMappings))
         .sort((a, b) => a[3] - b[3]);
 
