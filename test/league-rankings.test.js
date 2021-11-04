@@ -8,7 +8,7 @@ describe('should produce correct data array for standings', () => {
         {
             id: 173893,
             event_total: 40,
-            player_name: "aimey wong",
+            player_name: "Aimey wong",
             rank: 1,
             last_rank: 1,
             rank_sort: 1,
