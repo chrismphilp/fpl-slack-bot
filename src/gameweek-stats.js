@@ -9,7 +9,7 @@ const web = new WebClient(slackToken);
 
 const COLUMNS = [
     {title: 'Name', getter: (_, {name}) => name},
-    {title: 'Deadline', getter: (_, {deadline_time}) => dayjs(deadline_time).format('dddd D MMMM YYYY HH:mm')},
+    {title: 'Deadline', getter: (_, {deadline_time}) => dayjs(deadline_time).format('ddd D MM YY HH:mm')},
     {title: 'Avg Pts', getter: (_, {average_entry_score}) => average_entry_score},
     {title: 'Highest Score', getter: (_, {highest_score}) => highest_score},
     {title: 'Most Selected', getter: (map, {most_selected}) => map.get(most_selected)},
@@ -42,10 +42,13 @@ const createDataTable = async () => [
 const processGameweekStats = () => new Promise(async (resolve, _) => {
     const [events, elements] = await getStaticData(({events, elements}) => [events, elements]);
     const currentGameweekId = events.find(event => event.is_current === true).id;
-    const lastThreeGameweeks = events.slice(Math.max(0, currentGameweekId - 5), Math.max(0, currentGameweekId));
-    const playerMappings = new Map(elements.map(player => [player.id, player.first_name + ' ' + player.second_name]));
+    const lastFiveGameweeks = events.slice(Math.max(0, currentGameweekId - 5), Math.max(0, currentGameweekId));
+    const playerMappings = new Map(elements.map(player => [
+        player.id,
+        player.first_name.substring(0, 1) + ' ' + player.second_name.substring(0, 15),
+    ]));
 
-    const gameweekStats = lastThreeGameweeks.map(gameweek => COLUMNS.map(col => col.getter(playerMappings, gameweek)));
+    const gameweekStats = lastFiveGameweeks.map(gameweek => COLUMNS.map(col => col.getter(playerMappings, gameweek)));
     return resolve(gameweekStats);
 });
 

@@ -4,5 +4,5 @@ const createErrorMessage = (message) => ({
 });
 
 module.exports = {
-    createErrorMessage
+    createErrorMessage,
 }

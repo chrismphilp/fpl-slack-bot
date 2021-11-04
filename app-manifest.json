@@ -15,17 +15,9 @@
     },
     "slash_commands": [
       {
-        "command": "/player-history",
-        "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-player-history",
-        "description": "Gameweek history for a selection of players",
-        "usage_hint": "playerId1, playerdId2, etc.",
-        "should_escape": true
-      },
-      {
-        "command": "/league-rankings",
-        "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-league-ranking",
-        "description": "Breakdown for a FPL league",
-        "usage_hint": "leagueId",
+        "command": "/gameweek",
+        "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-gameweek-stats",
+        "description": "Current Gameweek information",
         "should_escape": true
       },
       {
@@ -39,6 +31,20 @@
         "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-gameweek-dream-team",
         "description": "Current Gameweek dream team",
         "should_escape": true
+      },
+      {
+        "command": "/player-history",
+        "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-player-history",
+        "description": "Gameweek history for a selection of players",
+        "usage_hint": "playerId1, playerdId2, etc.",
+        "should_escape": true
+      },
+      {
+        "command": "/league-rankings",
+        "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-league-ranking",
+        "description": "Breakdown for a FPL league",
+        "usage_hint": "leagueId",
+        "should_escape": true
       }
     ]
   },
@@ -46,7 +52,6 @@
     "scopes": {
       "bot": [
         "chat:write",
-        "incoming-webhook",
         "commands"
       ]
     }

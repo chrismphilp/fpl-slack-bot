@@ -7,5 +7,5 @@ const standardDeviation = (values, mean) => {
 }
 
 module.exports = {
-    standardDeviation
+    standardDeviation,
 }
