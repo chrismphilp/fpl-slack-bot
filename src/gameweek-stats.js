@@ -2,7 +2,7 @@ const dayjs = require("dayjs");
 const {WebClient} = require('@slack/web-api');
 const {createErrorMessage} = require("./util/error");
 const {getStaticData} = require("./util/static-data");
-const {formatTextTable} = require("./util/format");
+const {formatTextTable, normaliseString} = require("./util/format");
 
 const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
@@ -45,7 +45,7 @@ const processGameweekStats = () => new Promise(async (resolve, _) => {
     const lastFiveGameweeks = events.slice(Math.max(0, currentGameweekId - 5), Math.max(0, currentGameweekId));
     const playerMappings = new Map(elements.map(player => [
         player.id,
-        player.first_name.substring(0, 1) + ' ' + player.second_name.substring(0, 10),
+        normaliseString(player.first_name.substring(0, 1) + ' ' + player.second_name.substring(0, 10)),
     ]));
 
     const gameweekStats = lastFiveGameweeks.map(gameweek => COLUMNS.map(col => col.getter(playerMappings, gameweek)));

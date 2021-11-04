@@ -2,7 +2,7 @@ const request = require('request');
 const {WebClient} = require('@slack/web-api');
 const {standardDeviation} = require("./util/math");
 const {createErrorMessage} = require("./util/error");
-const {formatTextTable} = require("./util/format");
+const {formatTextTable, normaliseString} = require("./util/format");
 
 const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
@@ -34,7 +34,7 @@ const playerHistory = async (req, res) => {
 
     res.status(200).send();
 
-    const dataTable = await createDataTable(playerIds.replace(/\s/g,'').split(','));
+    const dataTable = await createDataTable(playerIds.replace(/\s/g, '').split(','));
     const formattedText = formatTextTable(dataTable);
     await web.chat.postMessage({channel: channelId, text: formattedText});
 };
@@ -77,7 +77,11 @@ const processTeamInfo = (playerId) => new Promise((resolve, reject) => {
                 console.error('Error:', error);
                 return reject(error);
             }
-            return resolve([name, player_first_name, player_last_name]);
+            return resolve([
+                normaliseString(name),
+                normaliseString(player_first_name),
+                normaliseString(player_last_name),
+            ]);
         });
 });
 

@@ -2,7 +2,7 @@ const request = require('request');
 const {WebClient} = require('@slack/web-api');
 const {createErrorMessage} = require("./util/error");
 const {getStaticData} = require("./util/static-data");
-const {formatTextTable} = require("./util/format");
+const {formatTextTable, normaliseString} = require("./util/format");
 
 const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
@@ -67,8 +67,8 @@ const processPlayer = (playerId, points, players, teamMappings) => {
     const player = players.find(p => p.id === playerId);
 
     return [
-        player.first_name,
-        player.second_name,
+        normaliseString(player.first_name),
+        normaliseString(player.second_name),
         teamMappings.get(player.team),
         points,
         player.transfers_in,

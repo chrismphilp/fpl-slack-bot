@@ -1,7 +1,7 @@
 const request = require('request');
 const {WebClient} = require('@slack/web-api');
 const {createErrorMessage} = require("./util/error");
-const {formatTextTable} = require("./util/format");
+const {formatTextTable, normaliseString} = require("./util/format");
 
 const slackToken = process.env.SLACK_TOKEN;
 const web = new WebClient(slackToken);
@@ -48,7 +48,7 @@ const leagueRanking = (req, res) => {
 
 const createDataTable = (values) => [
     COLUMNS.map(row => row.title),
-    ...values.map(result => COLUMNS.map(row => result[row.key]))
+    ...values.map(result => COLUMNS.map(row => normaliseString(result[row.key]))),
 ];
 
 module.exports = {
