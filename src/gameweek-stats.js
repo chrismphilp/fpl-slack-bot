@@ -11,12 +11,12 @@ const COLUMNS = [
     {title: 'Name', getter: (_, {name}) => name},
     {title: 'Deadline', getter: (_, {deadline_time}) => dayjs(deadline_time).format('ddd D MM YY HH:mm')},
     {title: 'Avg Pts', getter: (_, {average_entry_score}) => average_entry_score},
-    {title: 'Highest Score', getter: (_, {highest_score}) => highest_score},
-    {title: 'Most Selected', getter: (map, {most_selected}) => map.get(most_selected)},
-    {title: 'Most Captained', getter: (map, {most_captained}) => map.get(most_captained)},
+    {title: 'Max Pts', getter: (_, {highest_score}) => highest_score},
+    {title: 'Most Sel.', getter: (map, {most_selected}) => map.get(most_selected)},
+    {title: 'Most Capt.', getter: (map, {most_captained}) => map.get(most_captained)},
     {title: 'Most VC', getter: (map, {most_vice_captained}) => map.get(most_vice_captained)},
-    {title: 'Most Transferred In', getter: (map, {most_transferred_in}) => map.get(most_transferred_in)},
-    {title: 'Transfers Made', getter: (_, {transfers_made}) => transfers_made},
+    {title: 'Most Trns. In', getter: (map, {most_transferred_in}) => map.get(most_transferred_in)},
+    {title: 'Total Trns.', getter: (_, {transfers_made}) => transfers_made},
 ];
 
 const gameweekStats = async (req, res) => {
@@ -45,7 +45,7 @@ const processGameweekStats = () => new Promise(async (resolve, _) => {
     const lastFiveGameweeks = events.slice(Math.max(0, currentGameweekId - 5), Math.max(0, currentGameweekId));
     const playerMappings = new Map(elements.map(player => [
         player.id,
-        player.first_name.substring(0, 1) + ' ' + player.second_name.substring(0, 15),
+        player.first_name.substring(0, 1) + ' ' + player.second_name.substring(0, 10),
     ]));
 
     const gameweekStats = lastFiveGameweeks.map(gameweek => COLUMNS.map(col => col.getter(playerMappings, gameweek)));
