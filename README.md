@@ -16,8 +16,8 @@ and a created [Slack bot](https://api.slack.com/apps?new_app=1).
 2) Setup secrets for the following fields in Github Actions:
    1) `GCP_SA_KEY` - 
    2) `GCP_PROJECT` -
-3) Update the `league-rankings-deploy.yaml` and `player-history-deploy.yaml` configuration
-properties to match your desired build (found in `.github/workflows/`).
+3) Update the `*-deploy.yaml` configuration properties to match your 
+desired build (found in `.github/workflows/`).
 4) Run the Github actions
 5) With your now deployed GCloud functions, you can enter the provided URL with
 your choice of slack commands.

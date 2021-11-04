@@ -9,7 +9,7 @@ const web = new WebClient(slackToken);
 
 const COLUMNS = [
     {title: 'Name', getter: (_, {name}) => name},
-    {title: 'Deadline', getter: (_, {deadline_time}) => dayjs(deadline_time).format('ddd D MM YY HH:mm')},
+    {title: 'Deadline', getter: (_, {deadline_time}) => dayjs(deadline_time).format('ddd DD MMM HH:mm')},
     {title: 'Avg Pts', getter: (_, {average_entry_score}) => average_entry_score},
     {title: 'Max Pts', getter: (_, {highest_score}) => highest_score},
     {title: 'Most Sel.', getter: (map, {most_selected}) => map.get(most_selected)},
