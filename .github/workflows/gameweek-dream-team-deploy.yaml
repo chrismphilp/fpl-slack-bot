@@ -2,7 +2,7 @@ name: Deploy Gameweek Dream Team Function to gcloud
 
 on:
   push:
-    branches: [ main ]
+    paths: [ '.github/**', 'test/**', 'src/util/**', 'src/gameweek-dream-team.js' ]
   pull_request:
     branches: [ main ]
 

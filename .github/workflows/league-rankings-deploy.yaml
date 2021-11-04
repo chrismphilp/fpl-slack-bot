@@ -2,7 +2,7 @@ name: Deploy League Rankings Function to gcloud
 
 on:
   push:
-    branches: [ main ]
+    paths: [ '.github/**', 'test/**', 'src/util/**', 'src/league-rankings.js' ]
   pull_request:
     branches: [ main ]
 

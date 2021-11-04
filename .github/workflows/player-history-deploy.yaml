@@ -2,7 +2,7 @@ name: Deploy Player History Function to gcloud
 
 on:
   push:
-    branches: [ main ]
+    paths: [ '.github/**', 'test/**', 'src/util/**', 'src/player-history.js' ]
   pull_request:
     branches: [ main ]
 

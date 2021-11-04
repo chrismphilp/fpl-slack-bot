@@ -2,7 +2,7 @@ name: Deploy Gameweek Fixtures Function to gcloud
 
 on:
   push:
-    branches: [ main ]
+    paths: [ '.github/**', 'test/**', 'src/util/**', 'src/gameweek-fixtures.js' ]
   pull_request:
     branches: [ main ]
 
