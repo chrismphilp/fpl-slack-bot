@@ -48,7 +48,9 @@ const leagueRanking = (req, res) => {
 
 const createDataTable = (values) => [
     COLUMNS.map(row => row.title),
-    ...values.map(result => COLUMNS.map(row => normaliseString(result[row.key]))),
+    ...values.map(result =>
+        COLUMNS.map(row =>
+            normaliseString(result[row.key] + ''))),
 ];
 
 module.exports = {
