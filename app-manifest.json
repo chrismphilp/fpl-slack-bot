@@ -15,7 +15,7 @@
     },
     "slash_commands": [
       {
-        "command": "/gameweek",
+        "command": "/gameweek-stats",
         "url": "https://europe-west2-slack-fpl-bot.cloudfunctions.net/fpl-gameweek-stats",
         "description": "Current Gameweek information",
         "should_escape": true
